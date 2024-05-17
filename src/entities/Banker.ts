@@ -11,7 +11,7 @@ import { Customer } from "./Customers";
 
 @Entity("banker")
 export class Banker extends Personal {
-  @Column({ type: "simple-json" })
+  @Column({ type: "simple-json", nullable: true })
   address: {
     address: string;
     city: string;
