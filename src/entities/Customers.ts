@@ -13,7 +13,7 @@ import { Banker } from "./Banker";
 
 @Entity("customer")
 export class Customer extends Personal {
-  @Column({ type: "numeric", default: 0 })
+  @Column({ type: "int", default: 0 })
   balance: number;
 
   @Column({ type: "simple-json", nullable: true })
