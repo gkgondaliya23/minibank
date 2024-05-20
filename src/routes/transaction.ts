@@ -1,9 +1,9 @@
 import express from "express";
-import { getTransactions} from "../controllers/transactionController";
+import { getTransactions, updateTransaction} from "../controllers/transactionController";
 
 const transactionRoutes = express.Router();
 
 transactionRoutes.get("/", getTransactions);
-// transactionRoutes.post('/register', resgisterBanker);
+transactionRoutes.put('/banker/:bankerId/customer/:customerId', updateTransaction);
 
 export default transactionRoutes;

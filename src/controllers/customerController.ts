@@ -1,16 +1,28 @@
 import { Request, Response } from "express";
-import { getRepository } from "typeorm";
+import { createQueryBuilder } from "typeorm";
 import { Customer } from "../entities/Customers";
 import { Transaction, TransactionType } from "../entities/Transaction";
 
 export const getCustomer = async (_req: Request, res: Response) => {
   try {
-    const customers = await getRepository(Customer).find({});
+    // const customers = await getRepository(Customer).find({});
+    // res.json(customers);
+    const customers = await createQueryBuilder("customer").select(
+      "customer.id"
+    )
+    .addSelect('customer.firstName')
+    .addSelect('customer.lastName')
+    .addSelect('customer.balance')
+    .from(Customer, 'customer')
+    .leftJoinAndSelect('customer.transactions', 'transactions')
+    .where('customer.balance>= :minBalance AND customer.balance<= :maxBalance',{minBalance:0, maxBalance:15000})
+    .getMany();
     res.json(customers);
   } catch (error) {
     res.json({ message: "Internal Error" });
   }
 };
+
 
 export const registerCustomer = async (req: Request, res: Response) => {
   try {
@@ -61,3 +73,13 @@ export const customerTransactions = async (req: Request, res: Response) => {
     return res.json({ message: "Internal Error" });
   }
 };
+
+export const deleteCustomer = async (req: Request, res: Response) => {
+  try {
+    const {customerId} = req.params;
+    await Customer.delete(parseInt(customerId));
+    res.json({message: 'Delete Customer Successfully...!!!!'});
+  } catch (error) {
+    res.json({message: 'Internal Error'});
+  }
+}
